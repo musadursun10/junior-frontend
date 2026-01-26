@@ -1,5 +1,6 @@
 import { CheckCircle2, ClipboardList, Hourglass } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import StatCard from '../components/StatCard';
 import { api } from '../lib/api';
 
@@ -10,33 +11,20 @@ type Todo = {
   completed: boolean;
 };
 
+async function fetchTodos() {
+  const res = await api.get<Todo[]>('/todos?_limit=12');
+  return res.data;
+}
+
 export default function Home() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function load() {
-      try {
-        setLoading(true);
-        setError(null);
-        const res = await api.get<Todo[]>('/todos?_limit=12');
-        if (isMounted) setTodos(res.data);
-      } catch {
-        if (isMounted) setError('Veri çekilirken hata oluştu.');
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-
-    load();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const {
+    data: todos = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['todos', 12],
+    queryFn: fetchTodos,
+  });
 
   const stats = useMemo(() => {
     const total = todos.length;
@@ -48,7 +36,7 @@ export default function Home() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold">Dashboard</h1>
-      <p className="mt-2 text-slate-600">API’den örnek veri çekme (Axios + TypeScript).</p>
+      <p className="mt-2 text-slate-600">API’den veri çekme (Axios + TypeScript + React Query).</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard label="Görevler" value={stats.total} subtitle="Toplam" icon={<ClipboardList size={18} />} />
@@ -59,10 +47,10 @@ export default function Home() {
       <div className="mt-8">
         <h2 className="text-xl font-semibold">Son Görevler</h2>
 
-        {loading ? (
+        {isLoading ? (
           <p className="mt-3 text-slate-600">Yükleniyor...</p>
-        ) : error ? (
-          <p className="mt-3 text-red-600">{error}</p>
+        ) : isError ? (
+          <p className="mt-3 text-red-600">Veri çekilirken hata oluştu.</p>
         ) : (
           <ul className="mt-3 divide-y rounded-xl border">
             {todos.map((t) => (
