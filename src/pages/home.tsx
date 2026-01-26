@@ -1,3 +1,4 @@
+import { CheckCircle2, ClipboardList, Hourglass } from 'lucide-react';
 import StatCard from '../components/StatCard';
 
 export default function Home() {
@@ -9,9 +10,24 @@ export default function Home() {
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard label="Görevler" value={12} subtitle="Toplam oluşturulan" icon={<span>🧾</span>} />
-        <StatCard label="Tamamlanan" value={5} subtitle="Bu hafta" icon={<span>✅</span>} />
-        <StatCard label="Bekleyen" value={7} subtitle="Aksiyon bekliyor" icon={<span>⏳</span>} />
+        <StatCard
+          label="Görevler"
+          value={12}
+          subtitle="Toplam oluşturulan"
+          icon={<ClipboardList size={18} />}
+        />
+        <StatCard
+          label="Tamamlanan"
+          value={5}
+          subtitle="Bu hafta"
+          icon={<CheckCircle2 size={18} />}
+        />
+        <StatCard
+          label="Bekleyen"
+          value={7}
+          subtitle="Aksiyon bekliyor"
+          icon={<Hourglass size={18} />}
+        />
       </div>
     </div>
   );
