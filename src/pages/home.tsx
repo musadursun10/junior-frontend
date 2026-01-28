@@ -2,19 +2,7 @@ import { CheckCircle2, ClipboardList, Hourglass } from 'lucide-react';
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import StatCard from '../components/StatCard';
-import { api } from '../lib/api';
-
-type Todo = {
-  userId: number;
-  id: number;
-  title: string;
-  completed: boolean;
-};
-
-async function fetchTodos() {
-  const res = await api.get<Todo[]>('/todos?_limit=12');
-  return res.data;
-}
+import { fetchTodos, type Todo } from '../lib/api';
 
 export default function Home() {
   const {
@@ -23,12 +11,12 @@ export default function Home() {
     isError,
   } = useQuery({
     queryKey: ['todos', 12],
-    queryFn: fetchTodos,
+    queryFn: () => fetchTodos(12),
   });
 
   const stats = useMemo(() => {
     const total = todos.length;
-    const done = todos.filter((t) => t.completed).length;
+    const done = todos.filter((t: Todo) => t.completed).length;
     const pending = total - done;
     return { total, done, pending };
   }, [todos]);
@@ -36,7 +24,7 @@ export default function Home() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold">Dashboard</h1>
-      <p className="mt-2 text-slate-600">API’den veri çekme (Axios + TypeScript + React Query).</p>
+      <p className="mt-2 text-slate-600">React Query ile cache’li veri çekme + listeleme.</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard label="Görevler" value={stats.total} subtitle="Toplam" icon={<ClipboardList size={18} />} />
