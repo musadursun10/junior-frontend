@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { createTodo } from '../lib/api';
 
 const schema = z.object({
@@ -29,10 +30,12 @@ export default function NewTodo() {
   const mutation = useMutation({
     mutationFn: (title: string) => createTodo(title),
     onSuccess: () => {
-      // Home sayfasındaki todos query'sini tekrar çektir
       queryClient.invalidateQueries({ queryKey: ['todos'] });
       reset();
-      alert('Todo eklendi (API sahte, ama akış gerçek).');
+      toast.success('Todo eklendi (API sahte, akış gerçek).');
+    },
+    onError: () => {
+      toast.error('Kaydetme sırasında hata oluştu.');
     },
   });
 
@@ -43,7 +46,7 @@ export default function NewTodo() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold">Yeni Todo</h1>
-      <p className="mt-2 text-slate-600">React Hook Form + Zod + React Query Mutation.</p>
+      <p className="mt-2 text-slate-600">RHF + Zod + React Query Mutation + Toast.</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 max-w-xl space-y-3">
         <div>
@@ -55,10 +58,6 @@ export default function NewTodo() {
           />
           {errors.title ? <p className="mt-1 text-sm text-red-600">{errors.title.message}</p> : null}
         </div>
-
-        {mutation.isError ? (
-          <p className="text-sm text-red-600">Kaydetme sırasında hata oluştu.</p>
-        ) : null}
 
         <button
           type="submit"
