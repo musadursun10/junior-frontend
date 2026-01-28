@@ -17,6 +17,9 @@ export default function Navbar() {
         <NavLink className={linkClass} to="/about">
           About
         </NavLink>
+        <NavLink className={linkClass} to="/new">
+          New Todo
+        </NavLink>
       </nav>
     </header>
   );

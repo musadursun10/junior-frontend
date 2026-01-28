@@ -1,7 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import About from './pages/About';
+import Home from './pages/home';
+import About from './pages/about2';
+import NewTodo from './pages/NewTodo';
 import NotFound from './pages/NotFound';
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/new" element={<NewTodo />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
