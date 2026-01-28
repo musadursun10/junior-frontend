@@ -1,26 +1,53 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../lib/auth';
+
+const linkClass = ({ isActive }: { isActive: boolean }) =>
+  `px-3 py-2 rounded-md ${isActive ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`;
 
 export default function Navbar() {
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `text-slate-700 hover:underline ${isActive ? 'font-semibold text-slate-900' : ''}`;
+  const user = useAuth((s) => s.user);
+  const logout = useAuth((s) => s.logout);
+  const navigate = useNavigate();
 
   return (
     <header className="border-b">
-      <nav className="mx-auto flex max-w-5xl items-center gap-4 p-4">
-        <NavLink className="font-semibold" to="/">
-          JUNIOR-FE
-        </NavLink>
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <div className="font-extrabold tracking-tight">JUNIOR-FE</div>
 
-        <NavLink className={linkClass} to="/">
-          Home
-        </NavLink>
-        <NavLink className={linkClass} to="/about">
-          About
-        </NavLink>
-        <NavLink className={linkClass} to="/new">
-          New Todo
-        </NavLink>
-      </nav>
+        <nav className="flex items-center gap-2">
+          <NavLink to="/" className={linkClass}>
+            Home
+          </NavLink>
+          <NavLink to="/about" className={linkClass}>
+            About
+          </NavLink>
+          <NavLink to="/new" className={linkClass}>
+            New Todo
+          </NavLink>
+
+          {user ? (
+            <>
+              <NavLink to="/admin" className={linkClass}>
+                Admin
+              </NavLink>
+
+              <button
+                className="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100"
+                onClick={() => {
+                  logout();
+                  navigate('/login');
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <NavLink to="/login" className={linkClass}>
+              Login
+            </NavLink>
+          )}
+        </nav>
+      </div>
     </header>
   );
 }
