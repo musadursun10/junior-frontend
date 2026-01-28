@@ -24,6 +24,9 @@ export default function Navbar() {
           <NavLink to="/new" className={linkClass}>
             New Todo
           </NavLink>
+          <NavLink to="/todos" className={linkClass}>
+            Todos
+          </NavLink>
 
           {user ? (
             <>

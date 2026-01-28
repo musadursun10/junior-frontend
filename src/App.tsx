@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/home';
 import About from './pages/about2';
 import NewTodo from './pages/NewTodo';
+import Todos from './pages/Todos';
 import Login from './pages/Login2';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/new" element={<NewTodo />} />
+          <Route path="/todos" element={<Todos />} />
 
           <Route path="/login" element={<Login />} />
           <Route
